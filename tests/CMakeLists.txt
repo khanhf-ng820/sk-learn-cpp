@@ -1,0 +1,1 @@
+# Test suite CMake configuration
