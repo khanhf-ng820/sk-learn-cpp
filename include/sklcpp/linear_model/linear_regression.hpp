@@ -1,10 +1,12 @@
 #pragma once
 #include <Eigen/Dense>
+#include <sklcpp/estimator.hpp>
 #include <stdexcept>
+
 
 namespace sklcpp {
 
-class LinearRegression {
+class LinearRegression : public RegressorBase {
 public:
 	enum class Method { NormalEquation, GradientDescent };
 
@@ -14,7 +16,7 @@ public:
 	const Eigen::VectorXd& weights() const { return weights_; }
 	double bias() const { return bias_; }
 
-	LinearRegression& fit(const Eigen::MatrixXd& X, const Eigen::VectorXd& y) {
+	void fit(const Eigen::MatrixXd& X, const Eigen::VectorXd& y) override {
 		if (X.rows() != y.rows())
 			throw std::invalid_argument("[ERROR] X and y must have the same number of rows.");
 
@@ -41,15 +43,13 @@ public:
 				bias_ -= lr_ * db;
 			}
 		}
-
-		return *this;
 	}
 
-	Eigen::VectorXd predict(const Eigen::MatrixXd& X) const {
+	Eigen::VectorXd predict(const Eigen::MatrixXd& X) const override {
 		return X * weights_ + Eigen::VectorXd::Constant(X.rows(), bias_);
 	}
 
-	double score(const Eigen::MatrixXd& X, const Eigen::VectorXd& y) {
+	double score(const Eigen::MatrixXd& X, const Eigen::VectorXd& y) const override {
 		Eigen::VectorXd y_pred = predict(X);
 		double y_avg = y.mean();
 		double ss_res = (y - y_pred).squaredNorm();
@@ -63,7 +63,7 @@ private:
 	double lr_;
 	int n_iters_;
 	Eigen::VectorXd weights_ = Eigen::VectorXd::Zero(1);
-	double bias_ = 0.;
+	double bias_ = 0;
 };
 
 } // namespace sklcpp
