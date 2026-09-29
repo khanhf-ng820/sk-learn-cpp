@@ -49,13 +49,13 @@ public:
 		return X * weights_ + Eigen::VectorXd::Constant(X.rows(), bias_);
 	}
 
-	double score(const Eigen::MatrixXd& X, const Eigen::VectorXd& y) const override {
-		Eigen::VectorXd y_pred = predict(X);
-		double y_avg = y.mean();
-		double ss_res = (y - y_pred).squaredNorm();
-		double ss_tot = (y - Eigen::VectorXd::Constant(y.size(), y_avg)).squaredNorm();
-		return 1.0 - ss_res / ss_tot;
-	}
+	// double score(const Eigen::MatrixXd& X, const Eigen::VectorXd& y) const override {
+	// 	Eigen::VectorXd y_pred = predict(X);
+	// 	double y_avg = y.mean();
+	// 	double ss_res = (y - y_pred).squaredNorm();
+	// 	double ss_tot = (y - Eigen::VectorXd::Constant(y.size(), y_avg)).squaredNorm();
+	// 	return 1.0 - ss_res / ss_tot;
+	// }
 
 
 private:
